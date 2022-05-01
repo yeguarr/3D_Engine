@@ -19,7 +19,7 @@ public class ControlsGUI extends MouseAdapter implements KeyListener {
         currentRotation = new Point3D(camera.getRotation());
     }
     
-    public void update() {
+    public void updateControls() {
         updateKeys();
         updateMouse();
     }

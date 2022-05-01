@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
@@ -12,7 +11,6 @@ public class ReaderOBJ {
         File text = new File(file);
         try {
             Scanner reader = new Scanner(text);
-            int lineNumber = 1;
             while(reader.hasNextLine()){
                 String[] data = reader.nextLine().trim().replaceAll(" +", " ").split(" ");
                 if (data[0].equals("v")) {
@@ -34,18 +32,18 @@ public class ReaderOBJ {
                         int second = getCorrectV(Integer.parseInt(data[2].split("/")[0])) - 1;
                         int third = getCorrectV(Integer.parseInt(data[3].split("/")[0])) - 1;
                         faces.add(new Triangle3D(vertices.get(first), vertices.get(second), vertices.get(third)));
-                    } /*else {
+                    } else {
                         List<Point3D> buff = new LinkedList<>();
                         for (int i = 1; i < data.length; i++) {
                             int pos = getCorrectV(Integer.parseInt(data[i].split("/")[0])) - 1;
                             buff.add(vertices.get(pos));
                         }
-                        Polygon3D pol = new Polygon3D(buff.toArray(new Point3D[0]));
-                        Color color = Color.getHSBColor((float) ((pol.getNormal().dot(new Point3D(0, 0, 1)))),1,1);
-                        faces.add(new Polygon3D(buff.toArray(new Point3D[0]), color));
-                    }*/
+                        Point3D first = buff.get(0);
+                        for (int i = 1; i < buff.size() - 1; i++) {
+                            faces.add(new Triangle3D(first, buff.get(i),buff.get(i+1)));
+                        }
+                    }
                 }
-                lineNumber++;
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

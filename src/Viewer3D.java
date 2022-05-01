@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,9 +54,7 @@ public class Viewer3D extends JComponent {
         viewerTransform = Utils.move((float)(this.getBounds().width / 2.), (float)(this.getBounds().height / 2.), 0).multiply(viewerTransform);
 
         for (Object3D obj : objects) {
-            Matrix.f4x4 transform = Utils.eye4x4();
-
-            transform = Utils.rotate(obj.getRotation()).multiply(transform);
+            Matrix.f4x4 transform = Utils.rotate(obj.getRotation());
             transform = Utils.move(obj.getCentre()).multiply(transform);
             transform = Utils.move(obj.getPosition()).multiply(transform);
 
@@ -64,7 +63,8 @@ public class Viewer3D extends JComponent {
             for (Shape3D shape : obj.getFaces()) {
                 Shape3D transformed = shape.getTransformed(transform);
                 if (transformed.getNormal().dot(new Point3D(0, 0, 1)) < 0) {
-                    drawShapes.add(transformed);
+                    if(Arrays.stream(transformed.getVertices()).map(Point3D::getCoordinate).map(Matrix.f4x1::getD).noneMatch(number -> number < 0))
+                        drawShapes.add(transformed);
                 }
             }
         }

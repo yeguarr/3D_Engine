@@ -7,8 +7,13 @@ public class Camera {
         this.rotation = rotation;
     }
 
+    public Camera() {
+        this.position = new Point3D();
+        this.rotation = new Point3D();
+    }
+
     public Matrix.f4x4 getTransformMatrix() {
-        return Utils.rotate(new Point3D(rotation.getX(),rotation.getY(),-rotation.getZ())).multiply(Utils.move(position));
+        return Utils.rotate(rotation).multiply(Utils.move(position));
     }
 
     public Point3D getPosition() {

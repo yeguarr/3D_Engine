@@ -1,5 +1,4 @@
 public class Point3D {
-
     private final Matrix.f4x1 coordinate;
 
     Point3D() {
@@ -45,6 +44,10 @@ public class Point3D {
         return new Point3D(xp,yp,zp,coordinate.getD());
     }
 
+    public Point3D multiply(float k) {
+        return new Point3D(this.getX()*k,this.getY()*k,this.getZ()*k);
+    }
+
     public float dot(Point3D second) {
         return this.getX() * second.getX() + this.getY() * second.getY() + this.getZ() * second.getZ();
     }
@@ -56,4 +59,9 @@ public class Point3D {
         float r = (float) Math.sqrt(this.dot(this));
         return new Point3D(getX()/r,getY()/r,getZ()/r);
     }
+    @Override
+    public String toString() {
+        return coordinate.getA()+" "+coordinate.getB()+" "+coordinate.getC()+" "+coordinate.getD();
+    }
+
 }

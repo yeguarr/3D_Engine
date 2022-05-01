@@ -11,7 +11,7 @@ public class MainFrame {
     public MainFrame() {
         frame = new JFrame("3D Viewer");
         updater = new Updater(60);
-        camera = new Camera(new Point3D(0,0,-30), new Point3D(0,0,1));
+        camera = new Camera();
         controlsGUI = new ControlsGUI(camera);
         viewer3D = new Viewer3D(controlsGUI);
     }
@@ -23,13 +23,16 @@ public class MainFrame {
     }
 
     public void setup() {
+        camera.setPosition(new Point3D(0,0,-30));
+
         Object3D teapot = new ReaderOBJ("teapot.obj").getObject();
         viewer3D.addObject3D(teapot);
 
-        updater.addTask(controlsGUI::update);
+        updater.addTask(controlsGUI::updateControls);
         updater.addTask(viewer3D::updateComponent);
-        updater.addTask(() -> {teapot.setRotation(teapot.getRotation().add(1,1,1));});
-        updater.addTask(() -> {System.out.println(updater.getFrames());});
+        //updater.addTask(() -> teapot.setRotation(teapot.getRotation().add(1,1,1)));
+        //updater.addTask(() -> camera.setRotation(camera.getRotation().add(0,180,0)));
+        //updater.addTask(() -> System.out.println(updater.getFrames()));
         updater.start();
     }
 
