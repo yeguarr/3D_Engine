@@ -1,24 +1,28 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class MainFrame {
-    JFrame frame;
+public class MainFrame extends JFrame {
     Updater updater;
     Camera camera;
     ControlsGUI controlsGUI;
     Viewer3D viewer3D;
 
     public MainFrame() {
-        frame = new JFrame("3D Viewer");
-        updater = new Updater(60);
+        super("3D Viewer");
+        updater = new Updater(80);
         camera = new Camera();
         controlsGUI = new ControlsGUI(camera);
         viewer3D = new Viewer3D(controlsGUI);
+        setup();
     }
 
     public static void main(String[] args) {
         MainFrame mainFrame = new MainFrame();
-        mainFrame.setup();
+        mainFrame.updater.start();
         mainFrame.display();
     }
 
@@ -33,18 +37,19 @@ public class MainFrame {
         //updater.addTask(() -> teapot.setRotation(teapot.getRotation().add(1,1,1)));
         //updater.addTask(() -> camera.setRotation(camera.getRotation().add(0,180,0)));
         //updater.addTask(() -> System.out.println(updater.getFrames()));
-        updater.start();
+
+        ///////// END OF TEST ZONE
     }
 
     void display() {
-        frame.setSize(500, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         viewer3D.setFocusable(true);
         viewer3D.grabFocus();
 
-        frame.add(viewer3D, BorderLayout.CENTER);
-        frame.setVisible(true);
+        add(viewer3D, BorderLayout.CENTER);
+        setVisible(true);
     }
 }

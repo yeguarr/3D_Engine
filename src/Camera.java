@@ -12,8 +12,8 @@ public class Camera {
         this.rotation = new Point3D();
     }
 
-    public Matrix.f4x4 getTransformMatrix() {
-        return Utils.rotate(rotation).multiply(Utils.move(position));
+    public Matrix.m4x4 getTransformMatrix() {
+        return Utils.rotX(rotation.getX()).multiply(Utils.rotY(rotation.getY())).multiply(Utils.rotZ(rotation.getZ())).multiply(Utils.move(position));
     }
 
     public Point3D getPosition() {

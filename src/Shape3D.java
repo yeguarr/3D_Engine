@@ -2,11 +2,11 @@ import java.awt.*;
 
 public abstract class Shape3D implements Comparable<Shape3D> {
 
-    public abstract Shape3D getTransformed(Matrix.f4x4 transformation);
+    public abstract Shape3D getTransformed(Matrix.m4x4 transformation);
 
     public abstract Polygon getPolygon();
 
-    public abstract float getZCentre();
+    public abstract double getZCentre();
     public abstract Point3D[] getVertices();
 
     public int compareTo(Shape3D o) {
@@ -18,4 +18,7 @@ public abstract class Shape3D implements Comparable<Shape3D> {
 
     public abstract Point3D getNormal();
 
+    public abstract Color getColor();
+
+    public abstract void drawOnComponent(Graphics2D g2d);
 }

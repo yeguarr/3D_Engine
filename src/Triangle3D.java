@@ -4,21 +4,24 @@ public class Triangle3D extends Shape3D {
     private Point3D first;
     private Point3D second;
     private Point3D third;
-
-    public Triangle3D() {
-        first = new Point3D();
-        second = new Point3D();
-        third = new Point3D();
-    }
+    private Color color;
 
     public Triangle3D(Point3D first, Point3D second, Point3D third) {
         this.first = first;
         this.second = second;
         this.third = third;
+        this.color = Color.WHITE;
     }
 
-    public Shape3D getTransformed(Matrix.f4x4 transformation) {
-        return new Triangle3D(transformation.multiply(this.first), transformation.multiply(this.second), transformation.multiply(this.third));
+    public Triangle3D(Point3D first, Point3D second, Point3D third, Color color) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
+        this.color = color;
+    }
+
+    public Shape3D getTransformed(Matrix.m4x4 transformation) {
+        return new Triangle3D(transformation.multiply(this.first), transformation.multiply(this.second), transformation.multiply(this.third),color);
     }
 
     @Override
@@ -27,7 +30,7 @@ public class Triangle3D extends Shape3D {
                 new int[]{(int) this.first.getY(), (int) this.second.getY(), (int) this.third.getY()}, 3);
     }
 
-    public float getZCentre() {
+    public double getZCentre() {
         return (this.first.getZ() + this.second.getZ() + this.third.getZ()) / 3;
     }
 
@@ -40,5 +43,16 @@ public class Triangle3D extends Shape3D {
         Point3D a = second.add(-first.getX(),-first.getY(),-first.getZ());
         Point3D b = third.add(-first.getX(),-first.getY(),-first.getZ());
         return a.cross(b).normalise();
+    }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void drawOnComponent(Graphics2D g2d) {
+        g2d.setPaint(this.getColor());
+        g2d.fillPolygon(this.getPolygon());
     }
 }

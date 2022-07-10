@@ -34,27 +34,28 @@ public class Viewer3D extends JComponent {
 
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setPaint(Color.BLACK);
-        Rectangle2D background = new Rectangle2D.Float();
+        Rectangle2D background = new Rectangle2D.Double();
         background.setFrame(0,0,this.getBounds().width,this.getBounds().height);
         g2d.fill(background);
 
-        g2d.setPaint(Color.WHITE);
         for (Shape3D shape : drawShapes) {
-            g2d.fillPolygon(shape.getPolygon());
+            shape.drawOnComponent(g2d);
+            /*g2d.setPaint(shape.getColor());
+            g2d.fillPolygon(shape.getPolygon());*/
         }
     }
 
     public void updateComponent() {
         drawShapes.clear();
 
-        Matrix.f4x4 viewerTransform = Utils.projection(90, 1, 1000, 0.1f).multiply(camera.getTransformMatrix());
+        Matrix.m4x4 viewerTransform = Utils.projection(90, 1, 1000, 0.1f).multiply(camera.getTransformMatrix());
         viewerTransform = Utils.scale(100, 100, 100).multiply(viewerTransform);
-        viewerTransform = Utils.move((float)(this.getBounds().width / 2.), (float)(this.getBounds().height / 2.), 0).multiply(viewerTransform);
+        viewerTransform = Utils.move((this.getBounds().width / 2.), (this.getBounds().height / 2.), 0).multiply(viewerTransform);
 
         for (Object3D obj : objects) {
-            Matrix.f4x4 transform = Utils.rotate(obj.getRotation());
+            Matrix.m4x4 transform = obj.getRotation();
             transform = Utils.move(obj.getCentre()).multiply(transform);
             transform = Utils.move(obj.getPosition()).multiply(transform);
 
@@ -62,8 +63,8 @@ public class Viewer3D extends JComponent {
 
             for (Shape3D shape : obj.getFaces()) {
                 Shape3D transformed = shape.getTransformed(transform);
-                if (transformed.getNormal().dot(new Point3D(0, 0, 1)) < 0) {
-                    if(Arrays.stream(transformed.getVertices()).map(Point3D::getCoordinate).map(Matrix.f4x1::getD).noneMatch(number -> number < 0))
+                if (transformed.getNormal().dot(new Point3D(0, 0, 1)) <= 0) {
+                    if(Arrays.stream(transformed.getVertices()).map(Point3D::getCoordinate).map(Matrix.m4x1::getD).noneMatch(number -> number < 0))
                         drawShapes.add(transformed);
                 }
             }

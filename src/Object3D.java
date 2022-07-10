@@ -1,17 +1,31 @@
 public class Object3D {
     private Point3D position;
-    private Point3D rotation;
+    private Matrix.m4x4 rotation;
     private Point3D centre;
     private Shape3D[] faces;
 
     public Object3D(Shape3D[] faces) {
         this.faces = faces;
-        position = new Point3D();
-        rotation = new Point3D();
+        this.position = new Point3D();
+        this.rotation = Utils.eye4x4();
         generateCentre();
     }
 
-    public Object3D(Shape3D[] faces, Point3D position, Point3D rotation) {
+    public Object3D() {
+        this.faces = new Shape3D[0];
+        this.position = new Point3D();
+        this.rotation = Utils.eye4x4();
+        this.centre = new Point3D();
+    }
+
+    public Object3D(Object3D object) {
+        this.faces = object.faces.clone();
+        this.position = new Point3D(object.position);
+        this.rotation = new Matrix.m4x4(object.rotation);
+        this.centre = new Point3D(object.centre);
+    }
+
+    public Object3D(Shape3D[] faces, Point3D position, Matrix.m4x4 rotation) {
         this.faces = faces;
         this.position = position;
         this.rotation = rotation;
@@ -19,12 +33,12 @@ public class Object3D {
     }
 
     private void generateCentre() {
-        float minX = Float.MAX_VALUE;
-        float maxX = -Float.MAX_VALUE;
-        float minY = Float.MAX_VALUE;
-        float maxY = -Float.MAX_VALUE;
-        float minZ = Float.MAX_VALUE;
-        float maxZ = -Float.MAX_VALUE;
+        double minX = Double.MAX_VALUE;
+        double maxX = -Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxY = -Double.MAX_VALUE;
+        double minZ = Double.MAX_VALUE;
+        double maxZ = -Double.MAX_VALUE;
 
         for (Shape3D shape : faces) {
             for (Point3D vertex : shape.getVertices()){
@@ -55,11 +69,11 @@ public class Object3D {
         this.position = position;
     }
 
-    public Point3D getRotation() {
+    public Matrix.m4x4 getRotation() {
         return rotation;
     }
 
-    public void setRotation(Point3D rotation) {
+    public void setRotation(Matrix.m4x4 rotation) {
         this.rotation = rotation;
     }
 
@@ -75,4 +89,7 @@ public class Object3D {
         return faces.length;
     }
 
+    public void setFaces(Shape3D[] faces) {
+        this.faces = faces;
+    }
 }
